@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -41,7 +42,15 @@ func parseInputs(file string) ([]idRange, error) {
 
 func isInvalidID(i int) bool {
 	s := fmt.Sprint(i)
-	return s[:len(s)/2] == s[len(s)/2:]
+
+	for i := 0; i < len(s)/2; i++ {
+		pattern := fmt.Sprintf("^(%s)+$", s[:i+1])
+		if match, _ := regexp.MatchString(pattern, s); match {
+			return true
+		}
+	}
+
+	return false
 }
 
 func findInvalidIDs(idRanges []idRange) []int {
